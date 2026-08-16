@@ -117,10 +117,13 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/tasks", response_model=list[TaskResponse])
-def get_tasks(db: Session = Depends(get_db)):
-    tasks = db.query(Task).all()
+def get_tasks(
+    skip: int = 0,
+    limit: int = 10,
+    db: Session = Depends(get_db)
+):
+    tasks = db.query(Task).offset(skip).limit(limit).all()
     return tasks
-
 
 
 
