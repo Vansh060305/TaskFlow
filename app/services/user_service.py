@@ -1,12 +1,15 @@
 from app.models import User
+from app.security import hash_password
 
 
 # Create a new user
 def create_user(db, user_data):
+    hashed_password = hash_password(user_data.password)
+
     new_user = User(
         name=user_data.name,
         email=user_data.email,
-        password=user_data.password
+        password=hashed_password
     )
 
     db.add(new_user)

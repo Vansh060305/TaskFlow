@@ -11,7 +11,7 @@ from app.schemas import UserCreate, UserUpdate, UserResponse
 
 # Import user service
 from app.services import user_service
-
+from app.auth import get_current_user
 
 # Create a router for user APIs
 router = APIRouter(
@@ -24,7 +24,8 @@ router = APIRouter(
 @router.post("/", response_model=UserResponse)
 def create_user(
     user_data: UserCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
 ):
     return user_service.create_user(db, user_data)
 

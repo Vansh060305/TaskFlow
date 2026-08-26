@@ -3,12 +3,12 @@ from app.models import Task
 
 
 # Create a new task
-def create_task(db, task_data):
+def create_task(db, task_data, user_id):
     new_task = Task(
         title=task_data.title,
         description=task_data.description,
         status=task_data.status,
-        user_id=task_data.user_id
+        user_id=user_id
     )
 
     db.add(new_task)
@@ -18,14 +18,22 @@ def create_task(db, task_data):
     return new_task
 
 
-# Get all tasks
-def get_all_tasks(db, skip=0, limit=10):
-    return db.query(Task).offset(skip).limit(limit).all()
+# Get all tasks of the current user
+def get_all_tasks(db, skip=0, limit=10, user_id=None):
+    return (
+        db.query(Task)
+        .filter(Task.user_id == user_id)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 
 # Get one task by ID
 def get_task_by_id(db, task_id):
-    return db.query(Task).filter(Task.id == task_id).first()
+    return db.query(Task).filter(
+        Task.id == task_id
+    ).first()
 
 
 # Update an existing task
